@@ -1,53 +1,37 @@
-# Anki Desktop
+# Anki Desktop (Docker Version)
 
-This is a dockerfile for the desktop version of Anki, which is useful for automating anki using addons like Anki-Connect. The app is accessible via a web interface bound to port 3000. The anki configuration is bound to a volume mounted at /config/app in the container. 
+This repository provides a containerized version of Anki, designed to support automation through add-ons like Anki-Connect.
 
+The application is accessible via a web interface on port `3000`, while the API is available on port `8765`. 
 
-## Docker Compose Examples
+Anki's configuration is stored in a volume mounted at `/config/.local/share` within the container.
 
-### Ports Exposed Directly
+## Component Versions
+- **Anki**: 2.1.35
 
-```
-services: 
-  anki-desktop: 
-    image: "pnorcross/anki-desktop:latest"
+## Example of the `docker-compose.yml` file
+
+    version: '3.8'
+
+    services:
+        anki-desktop:
+            image: mikescherbakov/anki-desktop-docker:latest
+            container_name: anki-desktop
+            ports:
+                - "3000:3000"
+                - "8765:8765"
+            volumes:
+                - anki-data:/config/.local/share
+            restart: unless-stopped
     volumes:
-      - /data/apps/anki/config:/config/app
-    ports: 
-      - 3000:3000
-      # Anki Connect port
-      - 8765:8765
- ```
+        anki-data:
 
-### Proxied through Traefik
+## Feedback
+Feel free to reach out at [scherbakov.mike@gmail.com](mailto:scherbakov.mike@gmail.com).
 
-```
-services: 
-  anki-desktop: 
-    image: "pnorcross/anki-desktop:latest"
-    networks:
-      - TraefikNet
-    volumes:
-      - /data/apps/anki/config:/config/app
-    labels:
-      - "traefik.docker.network=TraefikNet"
-      - "traefik.enable=true"
-      - "traefik.http.routers.anki.entryPoints=https"
-      - "traefik.http.routers.anki.tls=true"
-      - "traefik.http.routers.anki.service=anki"
-      - "traefik.http.services.anki.loadbalancer.server.port=3000"
-      - "traefik.http.services.anki.loadbalancer.server.scheme=http"
-      - "traefik.http.routers.anki.rule=Host(`anki.example.com`)"
-      # Anki Connect port
-      - "traefik.http.routers.ankiapi.entryPoints=https"
-      - "traefik.http.routers.ankiapi.tls=true"
-      - "traefik.http.routers.ankiapi.service=ankiapi"
-      - "traefik.http.services.ankiapi.loadbalancer.server.port=8765"
-      - "traefik.http.services.ankiapi.loadbalancer.server.scheme=http"
-      - "traefik.http.routers.ankiapi.rule=Host(`ankiapi.example.com`)"
+Feedback and pull requests are welcome!
 
-      
-networks: 
-  TraefikNet: 
-    external: true
- ```
+## Links
+[GitHub repository](https://github.com/ScherbakovMike/anki-desktop-docker)
+
+[Docker Hub repository](https://hub.docker.com/repository/docker/mikescherbakov/anki-desktop-docker)

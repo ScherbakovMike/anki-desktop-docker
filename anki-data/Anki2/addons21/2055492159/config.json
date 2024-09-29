@@ -1,7 +1,7 @@
 {
     "apiKey": null,
     "apiLogPath": null,
-    "webBindAddress": "172.17.0.2",
+    "webBindAddress": "0.0.0.0",
     "webBindPort": 8765,
     "webCorsOriginList": ["*"],
     "ignoreOriginList": []
