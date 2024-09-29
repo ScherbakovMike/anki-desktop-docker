@@ -1,19 +1,22 @@
-FROM lsiobase/rdesktop-web:focal
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntujammy
 
+RUN \
+        dpkg --configure -a && \
+        apt-get update && \
+        apt-get install -y libasound2 libegl1 libnss3 libxcb-xinerama0 python3-pyxdg tar wget zstd && \
+        apt-get install -y anki && \
+        dpkg --remove anki && \
+        wget https://apps.ankiweb.net/downloads/archive/anki-23.12.1-linux-qt5.tar.zst && \
+        zstd -d anki-23.12.1-linux-qt5.tar.zst --stdout | tar -xf - && \
+        cd anki-23.12.1-linux-qt5 && ./install.sh &&  cd .. && \
+        rm -rf anki-23.12.1-linux-qt5.tar.zst "anki-23.12.1-linux-qt5" && \
+        apt-get clean
 
- RUN \
-  apt-get update && \
-  apt-get install -y anki wget zstd xdg-utils && \
-  dpkg --remove anki && \
-  wget https://github.com/ankitects/anki/releases/download/2.1.54/anki-2.1.54-linux-qt5.tar.zst && \
-  tar --use-compress-program=unzstd -xvf anki-2.1.54-linux-qt5.tar.zst && \
-  cd anki-2.1.54-linux-qt5 && ./install.sh &&  cd .. && \
-  rm -rf anki-2.1.54-linux-qt5 anki-2.1.54-linux-qt5.tar.zst && \
-  apt-get clean && \
-  mkdir -p /config/.local/share && \
-  ln -s /config/app/Anki  /config/.local/share/Anki  && \
-  ln -s /config/app/Anki2 /config/.local/share/Anki2
+EXPOSE 3000 8765
 
-VOLUME "/config/app" 
+VOLUME "/config/.local/share"
 
-COPY root/ /
+COPY /anki-data/ /config/.local/share/
+COPY /root /
+
+RUN chmod -R a+rw /config/.local/share/Anki /config/.local/share/Anki2
