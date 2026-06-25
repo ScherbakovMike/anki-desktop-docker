@@ -1,0 +1,7 @@
+# This image is Linux-only; force LF so shell scripts work regardless of the
+# host the repo was cloned on (Windows checkouts default to CRLF otherwise).
+* text=auto eol=lf
+
+# Anki data files are binary — never apply EOL conversion.
+*.db binary
+*.anki2 binary

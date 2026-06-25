@@ -1,0 +1,11 @@
+# Secrets / local-only
+/docs/
+k8s/secret.yaml
+
+# IDE / local
+.idea/
+CLAUDE.md
+
+# Anki runtime state (regenerated in the container; not part of the seed)
+anki-data/Anki/
+anki-data/Anki2/anki.log

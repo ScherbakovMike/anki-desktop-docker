@@ -1,1 +1,15 @@
-export LC_ALL=en_US.UTF-8 && anki --no-sandbox
+#!/bin/bash
+# Runs as the "abc" user before the Anki GUI launches (HOME=/config).
+
+# Seed Anki's data dir on first start so the baked add-ons survive an empty
+# /config volume (e.g. a fresh Kubernetes PVC). Skipped once data exists.
+SEED="/defaults/anki-seed"
+DEST="${HOME:-/config}/.local/share"
+if [ -d "$SEED" ] && [ ! -d "$DEST/Anki2" ]; then
+    echo "[autostart] seeding Anki data into $DEST"
+    mkdir -p "$DEST"
+    cp -a "$SEED/." "$DEST/"
+fi
+
+export LC_ALL=en_US.UTF-8
+exec anki --no-sandbox

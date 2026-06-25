@@ -1,0 +1,14 @@
+# Not part of the image
+.git
+.gitignore
+.dockerignore
+.idea
+docs
+k8s
+CLAUDE.md
+README.md
+docker-compose.yml
+
+# Anki runtime state — regenerated in the container, must not be seeded
+anki-data/Anki
+anki-data/Anki2/anki.log

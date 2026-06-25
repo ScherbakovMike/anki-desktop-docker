@@ -1,0 +1,6 @@
+{
+    "package": "anki-autosync",
+    "name": "Anki Autosync (headless)",
+    "min_point_version": 230900,
+    "max_point_version": 0
+}

@@ -1,9 +1,21 @@
-services: 
-  anki-desktop: 
-    image: "pnorcross/anki-desktop:latest"
+services:
+  anki-desktop:
+    image: mikescherbakov/anki-desktop-docker:latest
+    container_name: anki-desktop
+    ports:
+      - "3000:3000"   # Web UI (KasmVNC)
+      - "8765:8765"   # AnkiConnect API
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      # AnkiWeb credentials for headless auto-sync (anki-autosync add-on).
+      # Leave unset to skip auto-login and sign in via the web UI instead.
+      - ANKI_USERNAME=${ANKI_USERNAME:-}
+      - ANKI_PASSWORD=${ANKI_PASSWORD:-}
+      - ANKI_SYNC_INTERVAL=300
     volumes:
-      - /data/apps/anki/config:/config/app
-    ports: 
-      - 3000:3000
-      # Anki Connect port
-      - 8765:8765
+      - anki-data:/config
+    restart: unless-stopped
+volumes:
+  anki-data:
